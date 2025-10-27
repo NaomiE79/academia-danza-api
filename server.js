@@ -49,24 +49,23 @@ app.get('/', (req, res) => {
 // ------------------------------------------------------------------
 app.get('/videos', async (req, res) => {
     try {
-        // Consulta para obtener el video, la versión y el grupo al que pertenece (Tu lógica de negocio)
-        const query = `
-            SELECT 
-                v.titulo_video, v.enlace, 
-                g.nombre_grupo, 
-                vrs.nombre_version, c.nombre AS nombre_cancion
-            FROM video v
-            JOIN grupo g ON v.id_grupo = g.id_grupo
-            JOIN version vrs ON v.id_cancion = vrs.id_cancion AND v.id_version = vrs.id_version
-            JOIN cancion c ON v.id_cancion = c.id_cancion;
-        `;
-        const result = await client.query(query);
+        const { data: videos, error } = await supabase
+            .from('video') 
+            .select('*');
+
+        if (error) {
+            console.error('Error de Supabase:', error);
+            // Si hay un error, al menos envía el error para diagnosticarlo
+            return res.status(500).json({ message: "Error al consultar la BD", details: error.message }); 
+        }
+
+        // Si no hay error, debe enviar los datos
+        res.json(videos);
         
-        // Muestra el JSON de datos
-        res.json(result.rows);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al obtener videos desde la BD' });
+    } catch (e) {
+        // Si el servidor falla antes de la consulta
+        console.error('Error en la ruta /videos:', e.message);
+        res.status(500).send("Error interno del servidor.");
     }
 });
 
