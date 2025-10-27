@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
                 body { font-family: sans-serif; padding: 40px; text-align: center; }
                 a { color: #3458dbff; text-decoration: none; }
                 a:hover { text-decoration: underline; }
-                .status { padding: 10px; border-radius: 5px; background-color: #fb96edff; color: #9e45b5ff; border: 1px solid #ae27aeff; display: inline-block; }
+                .status { padding: 10px; border-radius: 5px; background-color: #fb96edff; color: #010001ff; border: 1px solid #ae27aeff; display: inline-block; }
             </style>
         </head>
         <body>
