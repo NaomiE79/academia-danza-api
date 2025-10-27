@@ -34,10 +34,15 @@ app.get('/', (req, res) => {
         </head>
         <body>
             <h1>Bienvenido a la API de la Academia de Danza</h1>
-            <p class="status">Aplicación Desplegada y Conectada a la Base de Datos.</p>
-            <p><strong>Funcionalidad Principal:</strong> Consulta de Videos de Coreografías.</p>
+            <p class="status">Aplicación Desplegada y Conectada a la Base de Datos</p>
+            <p><strong>Funcionalidad Principal:</strong> Consulta de Videos de Coreografías</p>
+
+
+            <p>La interfaz se accede a través de las rutas API (ej. /clientes)</p>  
+
+            
             <p>Accede a la ruta de datos para ver los videos:</p>
-            <p><a href="/videos">/videos</a></p>
+            <p><a href="/videos">videos</a></p>
         </body>
         </html>
     `);
