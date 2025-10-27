@@ -27,9 +27,9 @@ app.get('/', (req, res) => {
             <title>Academia de Danza API</title>
             <style>
                 body { font-family: sans-serif; padding: 40px; text-align: center; }
-                a { color: #3498db; text-decoration: none; }
+                a { color: #3458dbff; text-decoration: none; }
                 a:hover { text-decoration: underline; }
-                .status { padding: 10px; border-radius: 5px; background-color: #eaf7e3; color: #27ae60; border: 1px solid #27ae60; display: inline-block; }
+                .status { padding: 10px; border-radius: 5px; background-color: #fb96edff; color: #9e45b5ff; border: 1px solid #ae27aeff; display: inline-block; }
             </style>
         </head>
         <body>
@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
             <p>La interfaz se accede a través de las rutas API (ej. /clientes)</p>  
 
-            
+
             <p>Accede a la ruta de datos para ver los videos:</p>
             <p><a href="/videos">videos</a></p>
         </body>
