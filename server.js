@@ -1,19 +1,30 @@
 // server.js
+// Carga las variables de entorno (.env)
+require('dotenv').config(); 
 const express = require('express');
-const { Client } = require('pg'); 
-require('dotenv').config(); // Para cargar el archivo .env localmente
+const { Client } = require('pg'); // Importa el cliente de PostgreSQL
 
 const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 10000;
 
-// 1. Proceso de conexión entre aplicación y base de datos
+// Configuración del cliente de PostgreSQL
 const client = new Client({
-    connectionString: process.env.DATABASE_URL, // Usa la URI del .env / Render
+    connectionString: process.env.DATABASE_URL, // Usa la variable de Render/Supabase
+    // Ya configuraste la URL del Pooler, por lo que debería funcionar.
+    ssl: {
+        rejectUnauthorized: false 
+    }
 });
 
+// Conexión a la BD
 client.connect()
-    .then(() => console.log('✅ Conexión exitosa a Supabase (PostgreSQL)'))
-    .catch(err => console.error('❌ Error de conexión a la BD', err.stack));
+    .then(() => console.log('Conexión a PostgreSQL exitosa para la Práctica 4.1'))
+    .catch(err => console.error('Error de conexión a PostgreSQL:', err.stack));
+
+// Middleware necesario para procesar datos del formulario (POST)
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.json());
+
 
 // ------------------------------------------------------------------
 // RUTA 1: Interfaz de Usuario (HTML simple para el Entregable 1: Interfaz de usuario)
@@ -101,12 +112,107 @@ app.get('/videos', async (req, res) => {
 });
 */
 
-// ------------------------------------------------------------------
-// INICIO DEL SERVIDOR
-// ------------------------------------------------------------------
-// Render (o Node.js) asignará automáticamente una variable de entorno llamada PORT 
-// que usará el puerto 80 o 443. Si no la encuentra (localmente), usa 3000.
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Servidor Express escuchando en http://localhost:${PORT}`);
+// Ruta GET /login: Muestra el formulario de inicio de sesión
+app.get('/login', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Login - Práctica 4.1 SQLi</title>
+            <style>
+                body {
+                    background-color: #FBEFF2; /* Rosado claro */
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding-top: 50px;
+                }
+                .login-container {
+                    width: 300px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    border: 1px solid #C71585;
+                    border-radius: 10px;
+                    background-color: white;
+                }
+                input[type="text"], input[type="password"] {
+                    width: 90%;
+                    padding: 10px;
+                    margin: 8px 0;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+                button {
+                    background-color: #C71585;
+                    color: white;
+                    padding: 10px 15px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    margin-top: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="login-container">
+                <h2>Inicio de Sesión VULNERABLE (Práctica 4.1)</h2>
+                <form action="/login" method="POST">
+                    <input type="text" name="username" placeholder="Usuario" required><br>
+                    <input type="password" name="password" placeholder="Contraseña" required><br>
+                    <button type="submit">Iniciar Sesión</button>
+                </form>
+                <p style="margin-top: 20px; font-size: 12px; color: gray;">
+                    Instrucciones: Intenta iniciar sesión y luego prueba una inyección SQL para eludir la autenticación.
+                </p>
+            </div>
+        </body>
+        </html>
+    `);
 });
+
+
+// Ruta POST /login: Procesa el formulario con una consulta vulnerable
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    // **********************************************
+    // 🛑 ESTA ES LA CONSULTA VULNERABLE (SQL INJECTION)
+    // Se usa concatenación de string, lo cual permite la inyección.
+    // **********************************************
+    const vulnerableQuery = `
+        SELECT username 
+        FROM users 
+        WHERE username = '${username}' AND password = '${password}';
+    `;
+
+    console.log(`[VULNERABLE QUERY]: ${vulnerableQuery}`); // Útil para depurar
+
+    try {
+        const result = await client.query(vulnerableQuery);
+        
+        if (result.rows.length > 0) {
+            // Éxito en el login (o éxito de la inyección)
+            return res.send(`
+                <h2>¡Inicio de Sesión Exitoso!</h2>
+                <p>Bienvenido, ${result.rows[0].username}.</p>
+                <p style="color: green;">La aplicación te permitió el acceso.</p>
+                <a href="/login">Volver al login</a>
+            `);
+        } else {
+            // Credenciales incorrectas
+            return res.send(`
+                <h2>Error de Autenticación</h2>
+                <p>Usuario o contraseña incorrectos.</p>
+                <a href="/login">Volver a intentar</a>
+            `);
+        }
+    } catch (error) {
+        // Manejo de errores de SQL (ej. error de sintaxis por la inyección)
+        console.error('Error al ejecutar la consulta SQL:', error.message);
+        return res.status(500).send(`
+            <h2>ERROR INTERNO DEL SERVIDOR</h2>
+            <p>Ocurrió un error al procesar la solicitud. Revisa la terminal o los logs de Render para ver el error de SQL.</p>
+            <a href="/login">Volver al login</a>
+        `);
+    }
+});
+

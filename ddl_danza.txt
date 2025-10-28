@@ -1,0 +1,114 @@
+-- TABLA CANCION
+CREATE TABLE cancion (
+  id_cancion BIGINT PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  artista VARCHAR(50),
+  nueva BOOLEAN DEFAULT FALSE
+);
+
+-- TABLA VERSION
+CREATE TABLE version (
+  id_cancion BIGINT NOT NULL,
+  id_version BIGINT NOT NULL,
+  version_caracteristica VARCHAR(50),
+  nombre_version VARCHAR(50),
+  CONSTRAINT pk_version PRIMARY KEY (id_cancion, id_version),
+  CONSTRAINT fk_version_cancion FOREIGN KEY (id_cancion)
+    REFERENCES cancion(id_cancion)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+-- TABLA GRUPO
+CREATE TABLE grupo (
+  id_grupo BIGINT PRIMARY KEY,
+  nombre_grupo VARCHAR(50) NOT NULL
+);
+
+-- TABLAS DE ESPECIALIZACIÓN
+CREATE TABLE danza_urbana (
+  id_grupo BIGINT PRIMARY KEY,
+  bandera BOOLEAN,
+  hip_hop BOOLEAN,
+  CONSTRAINT fk_danza_urbana_grupo FOREIGN KEY (id_grupo)
+    REFERENCES grupo (id_grupo)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE danza_instrumento (
+  id_grupo BIGINT PRIMARY KEY,
+  bandera BOOLEAN,
+  heraldo BOOLEAN,
+  manto BOOLEAN,
+  abanico BOOLEAN,
+  pandero BOOLEAN,
+  liston BOOLEAN,
+  varita BOOLEAN,
+  lluvias BOOLEAN,
+  falda_regional BOOLEAN,
+  mantita BOOLEAN,
+  aros BOOLEAN,
+  CONSTRAINT fk_danza_instrumento_grupo FOREIGN KEY (id_grupo)
+    REFERENCES grupo (id_grupo)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE danza_niñas (
+  id_grupo BIGINT PRIMARY KEY,
+  hip_hop BOOLEAN,
+  varita BOOLEAN,
+  mantita BOOLEAN,
+  ballet BOOLEAN,
+  falda_regional BOOLEAN,
+  CONSTRAINT fk_danza_niñas_grupo FOREIGN KEY (id_grupo)
+    REFERENCES grupo (id_grupo)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+-- TABLA VIDEO
+CREATE TABLE video (
+  id_video BIGINT PRIMARY KEY,
+  titulo_video VARCHAR(50),
+  enlace TEXT,
+  descripcion TEXT,
+  dia INTEGER CHECK (dia BETWEEN 1 AND 31),
+  mes INTEGER CHECK (mes BETWEEN 1 AND 12),
+  año INTEGER CHECK (año >= 2000),
+  -- Claves foráneas
+  id_cancion BIGINT NOT NULL, 
+  id_version BIGINT NOT NULL,
+  id_grupo BIGINT NOT NULL,
+  CONSTRAINT fk_video_version FOREIGN KEY (id_cancion, id_version) 
+    REFERENCES version (id_cancion, id_version) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_video_grupo FOREIGN KEY (id_grupo)
+    REFERENCES grupo (id_grupo)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+-- TABLAS DE SUBTIPOS DE VIDEO
+CREATE TABLE presentacion (
+  id_video BIGINT PRIMARY KEY,
+  RN BOOLEAN,
+  RG BOOLEAN,
+  RJ BOOLEAN,
+  CONSTRAINT fk_presentacion_video FOREIGN KEY (id_video)
+    REFERENCES video (id_video)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE ensayo (
+  id_video BIGINT PRIMARY KEY,
+  lugar_ensayo VARCHAR(50),
+  comentarios TEXT,
+  CONSTRAINT fk_ensayo_video FOREIGN KEY (id_video)
+    REFERENCES video (id_video)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
