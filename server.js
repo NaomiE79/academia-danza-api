@@ -1,22 +1,4 @@
 // server.js
-
-// 1. IMPORTAR LA LIBRERÍA
-const { createClient } = require('@supabase/supabase-js');
-
-// 2. OBTENER LA URL DE CONEXIÓN DEL ENTORNO
-const supabaseUrl = process.env.DATABASE_URL;
-
-// 3. CREAR EL CLIENTE DE SUPABASE
-// Asegúrate de que esta línea exista y use el URL (que ya está configurado en Render)
-const supabase = createClient(supabaseUrl, {
-    auth: {
-        persistSession: false // Generalmente útil para backends/servidores
-    }
-});
-
-// Ahora, la variable 'supabase' está definida globalmente para todas las rutas.
-
-
 const express = require('express');
 const { Client } = require('pg'); 
 require('dotenv').config(); // Para cargar el archivo .env localmente
@@ -36,6 +18,7 @@ client.connect()
 // ------------------------------------------------------------------
 // RUTA 1: Interfaz de Usuario (HTML simple para el Entregable 1: Interfaz de usuario)
 // ------------------------------------------------------------------
+/*
 app.get('/', (req, res) => {
     // Esto es una interfaz de usuario simple para el entregable
     res.send(`
@@ -54,8 +37,29 @@ app.get('/', (req, res) => {
             <h1>Bienvenido a la API de la Academia de Danza</h1>
             <p class="status">Aplicación Desplegada y Conectada a la Base de Datos</p>
             <p><strong>Funcionalidad Principal:</strong> Consulta de Videos de Coreografías</p>
-            <p>Accede a la ruta de datos para ver los videos:</p>
-            <p><a href="/videos">videos</a></p>
+        </body>
+        </html>
+    `);
+});
+*/
+
+
+
+
+
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>API Academia de Danza</title></head>
+        <body>
+            <h1>Bienvenido a la API de la Academia de Danza</h1>
+            <p>Estado del servidor: **EN LÍNEA**.</p>
+            <p>La **Conexión a la Base de Datos** se encuentra configurada en el servidor (Render) para futuras implementaciones.</p>
+            <hr>
+            <h2>Portal de Acceso</h2>
+            <p>Esta es la interfaz de usuario requerida. Para iniciar sesión como administrador, accede al siguiente enlace:</p>
+            <a href="/login">Ir a la página de Iniciar Sesión (Funcionalidad Futura)</a>
         </body>
         </html>
     `);
@@ -65,6 +69,7 @@ app.get('/', (req, res) => {
 // ------------------------------------------------------------------
 // RUTA 2: Funcionalidad Principal (Consulta de Videos)
 // ------------------------------------------------------------------
+/*
 app.get('/videos', async (req, res) => {
     try {
         const { data: videos, error } = await supabase
@@ -86,7 +91,7 @@ app.get('/videos', async (req, res) => {
         res.status(500).send("Error interno del servidor.");
     }
 });
-
+*/
 
 // ------------------------------------------------------------------
 // INICIO DEL SERVIDOR
