@@ -1,4 +1,22 @@
 // server.js
+
+// 1. IMPORTAR LA LIBRERÍA
+const { createClient } = require('@supabase/supabase-js');
+
+// 2. OBTENER LA URL DE CONEXIÓN DEL ENTORNO
+const supabaseUrl = process.env.DATABASE_URL;
+
+// 3. CREAR EL CLIENTE DE SUPABASE
+// Asegúrate de que esta línea exista y use el URL (que ya está configurado en Render)
+const supabase = createClient(supabaseUrl, {
+    auth: {
+        persistSession: false // Generalmente útil para backends/servidores
+    }
+});
+
+// Ahora, la variable 'supabase' está definida globalmente para todas las rutas.
+
+
 const express = require('express');
 const { Client } = require('pg'); 
 require('dotenv').config(); // Para cargar el archivo .env localmente
