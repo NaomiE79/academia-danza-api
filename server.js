@@ -127,7 +127,7 @@ app.get('/login', (req, res) => {
                     <button type="submit">Iniciar Sesión</button>
                 </form>
                 <p style="margin-top: 20px; font-size: 12px; color: gray;">
-                    Instrucciones: Intenta iniciar sesión y luego prueba una inyección SQL para eludir la autenticación.
+                    Ingresa tu nombre de usuario y tu contraseña
                 </p>
             </div>
         </body>
@@ -158,7 +158,7 @@ app.post('/login', async (req, res) => {
             // Éxito en el login (o éxito de la inyección)
             return res.send(`
                 <h2>¡Inicio de Sesión Exitoso!</h2>
-                <p>Bienvenido, ${result.rows[0].username}.</p>
+                <p>Bienvenido.</p>
                 <p style="color: green;">La aplicación te permitió el acceso.</p>
                 <a href="/login">Volver al login</a>
             `);
