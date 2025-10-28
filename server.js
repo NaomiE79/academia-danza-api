@@ -18,7 +18,7 @@ client.connect()
 // ------------------------------------------------------------------
 // RUTA 1: Interfaz de Usuario (HTML simple para el Entregable 1: Interfaz de usuario)
 // ------------------------------------------------------------------
-/*
+
 app.get('/', (req, res) => {
     // Esto es una interfaz de usuario simple para el entregable
     res.send(`
@@ -37,27 +37,6 @@ app.get('/', (req, res) => {
             <h1>Bienvenido a la API de la Academia de Danza</h1>
             <p class="status">Aplicación Desplegada y Conectada a la Base de Datos</p>
             <p><strong>Funcionalidad Principal:</strong> Consulta de Videos de Coreografías</p>
-        </body>
-        </html>
-    `);
-});
-*/
-
-
-
-
-
-app.get('/', (req, res) => {
-    res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head><title>API Academia de Danza</title></head>
-        <body>
-            <h1>Bienvenido a la API de la Academia de Danza</h1>
-            <p>Estado del servidor: **EN LÍNEA**.</p>
-            <p>La **Conexión a la Base de Datos** se encuentra configurada en el servidor (Render) para futuras implementaciones.</p>
-            <hr>
-            <h2>Portal de Acceso</h2>
             <p>Esta es la interfaz de usuario requerida. Para iniciar sesión como administrador, accede al siguiente enlace:</p>
             <a href="/login">Ir a la página de Iniciar Sesión (Funcionalidad Futura)</a>
         </body>
