@@ -216,3 +216,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor Express escuchando en el puerto ${PORT}`);
+});
