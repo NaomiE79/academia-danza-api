@@ -27,18 +27,26 @@ app.get('/', (req, res) => {
         <head>
             <title>Academia de Danza API</title>
             <style>
-                body { font-family: sans-serif; padding: 40px; text-align: center; }
-                a { color: #3458dbff; text-decoration: none; }
-                a:hover { text-decoration: underline; }
-                .status { padding: 10px; border-radius: 5px; background-color: #ffbcf6ff; color: #010001ff; border: 1px solid #000000ff; display: inline-block; }
+                body {
+                    background-color: #f5dbe1ff;  /*fondo claro*/
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding-top: 50px;
+                }
+                h1 {
+                    color: #C71585; /* Rosa oscuro para el título */
+                }
+                a {
+                    color: #007bff;
+                }
             </style>
         </head>
         <body>
             <h1>Bienvenido a la API de la Academia de Danza</h1>
             <p class="status">Aplicación Desplegada y Conectada a la Base de Datos</p>
             <p><strong>Funcionalidad Principal:</strong> Consulta de Videos de Coreografías</p>
-            <p>Esta es la interfaz de usuario requerida. Para iniciar sesión como administrador, accede al siguiente enlace:</p>
-            <a href="/login">Ir a la página de Iniciar Sesión (Funcionalidad Futura)</a>
+            <p>Esta es la interfaz de usuario requerida. Para iniciar sesión accede al siguiente enlace:</p>
+            <a href="/login">INICIAR SESIÓN</a>
         </body>
         </html>
     `);
