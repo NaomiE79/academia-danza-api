@@ -10,16 +10,10 @@ const PORT = process.env.PORT || 10000;
 // Configuración del cliente de PostgreSQL
 const client = new Client({
     connectionString: process.env.DATABASE_URL, // Usa la variable de Render/Supabase
-    // Ya configuraste la URL del Pooler, por lo que debería funcionar.
     ssl: {
         rejectUnauthorized: false 
     }
 });
-
-// Conexión a la BD
-client.connect()
-    .then(() => console.log('Conexión a PostgreSQL exitosa para la Práctica 4.1'))
-    .catch(err => console.error('Error de conexión a PostgreSQL:', err.stack));
 
 // Middleware necesario para procesar datos del formulario (POST)
 app.use(express.urlencoded({ extended: true })); 
@@ -27,7 +21,7 @@ app.use(express.json());
 
 
 // ------------------------------------------------------------------
-// RUTA 1: Interfaz de Usuario (HTML simple para el Entregable 1: Interfaz de usuario)
+// RUTA 1: Interfaz de Usuario (Ruta Raíz)
 // ------------------------------------------------------------------
 
 app.get('/', (req, res) => {
@@ -83,34 +77,6 @@ app.get('/', (req, res) => {
         </html>
     `);
 });
-
-
-// ------------------------------------------------------------------
-// RUTA 2: Funcionalidad Principal (Consulta de Videos)
-// ------------------------------------------------------------------
-/*
-app.get('/videos', async (req, res) => {
-    try {
-        const { data: videos, error } = await supabase
-            .from('video') 
-            .select('*');
-
-        if (error) {
-            console.error('Error de Supabase:', error);
-            // Si hay un error, al menos envía el error para diagnosticarlo
-            return res.status(500).json({ message: "Error al consultar la BD", details: error.message }); 
-        }
-
-        // Si no hay error, debe enviar los datos
-        res.json(videos);
-        
-    } catch (e) {
-        // Si el servidor falla antes de la consulta
-        console.error('Error en la ruta /videos:', e.message);
-        res.status(500).send("Error interno del servidor.");
-    }
-});
-*/
 
 // Ruta GET /login: Muestra el formulario de inicio de sesión
 app.get('/login', (req, res) => {
@@ -176,7 +142,6 @@ app.post('/login', async (req, res) => {
 
     // **********************************************
     // 🛑 ESTA ES LA CONSULTA VULNERABLE (SQL INJECTION)
-    // Se usa concatenación de string, lo cual permite la inyección.
     // **********************************************
     const vulnerableQuery = `
         SELECT username 
@@ -209,13 +174,29 @@ app.post('/login', async (req, res) => {
         // Manejo de errores de SQL (ej. error de sintaxis por la inyección)
         console.error('Error al ejecutar la consulta SQL:', error.message);
         return res.status(500).send(`
-            <h2>ERROR INTERNO DEL SERVIDOR</h2>
-            <p>Ocurrió un error al procesar la solicitud. Revisa la terminal o los logs de Render para ver el error de SQL.</p>
+            <h2>ERROR INTERNO DEL SERVIDOR (Fallo de BD)</h2>
+            <p>Ocurrió un error al procesar la solicitud (revisa los logs para el error SQL: ${error.message}).</p>
             <a href="/login">Volver al login</a>
         `);
     }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor Express escuchando en http://0.0.0.0:${PORT}`);
-});
+
+// ------------------------------------------------------------------
+// FIX CRÍTICO: Mover app.listen para asegurar que la BD esté conectada
+// ------------------------------------------------------------------
+client.connect()
+    .then(() => {
+        console.log('Conexión a PostgreSQL exitosa para la Práctica 4.1');
+        
+        // El servidor Express solo empieza a escuchar una vez que la conexión de la BD es exitosa.
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Servidor Express listo y escuchando en http://0.0.0.0:${PORT}`);
+        });
+
+    })
+    .catch(err => {
+        console.error('Error de conexión a PostgreSQL:', err.stack);
+        // Si la BD falla, se termina el proceso para que Render lo sepa.
+        process.exit(1); 
+    });
