@@ -28,16 +28,37 @@ app.get('/', (req, res) => {
             <title>Academia de Danza API</title>
             <style>
                 body {
-                    background-color: #f5dbe1ff;  /*fondo claro*/
+                    background-color: #FBEFF2; /* Rosado muy claro */
                     font-family: Arial, sans-serif;
                     text-align: center;
                     padding-top: 50px;
                 }
                 h1 {
                     color: #C71585; /* Rosa oscuro para el título */
+                    margin-bottom: 20px;
                 }
-                a {
-                    color: #007bff;
+                h2 {
+                    color: #A05299; /* Tono morado para contraste */
+                }
+                
+                /* Estilo del Botón */
+                .button {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    margin-top: 15px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-decoration: none; /* Quita el subrayado del enlace */
+                    color: white; /* Color del texto del botón */
+                    background-color: #C71585; /* Rosa oscuro como color principal */
+                    border: none;
+                    border-radius: 5px; /* Bordes redondeados */
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+                
+                .button:hover {
+                    background-color: #B51378; /* Un poco más oscuro al pasar el ratón */
                 }
             </style>
         </head>
@@ -46,7 +67,7 @@ app.get('/', (req, res) => {
             <p class="status">Aplicación Desplegada y Conectada a la Base de Datos</p>
             <p><strong>Funcionalidad Principal:</strong> Consulta de Videos de Coreografías</p>
             <p>Esta es la interfaz de usuario requerida. Para iniciar sesión accede al siguiente enlace:</p>
-            <a href="/login">INICIAR SESIÓN</a>
+            <a href="/login"class="button">INICIAR SESIÓN</a>
         </body>
         </html>
     `);
