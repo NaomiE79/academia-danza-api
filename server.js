@@ -5,7 +5,7 @@ const express = require('express');
 const { Client } = require('pg'); // Importa el cliente de PostgreSQL
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // Configuración del cliente de PostgreSQL
 const client = new Client({
